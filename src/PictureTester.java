@@ -122,6 +122,20 @@ public class PictureTester
     gull.explore();
   }
 
+  public static void testCopyPart() {
+    Picture canvas = new Picture("640x480.jpg");
+    Picture beach = new Picture("beach.jpg");
+    canvas.copyPart(beach, 0, 100, 0, 100, 0, 0);
+    beach.explore();
+    canvas.explore();
+  }
+
+  public static void testMyCollage() {
+    Picture canvas = new Picture("640x480.jpg");
+    canvas.myCollage();
+    canvas.explore();
+  }
+
   /** Main method for testing.  Every class can have a main
     * method in Java */
   public static void main(String[] args)
@@ -142,10 +156,12 @@ public class PictureTester
     // testMirrorHorizontal();
     // testMirrorHorizontalBotToTop();
     // testMirrorArms();
-    testMirrorGull();
+    // testMirrorGull();
     // testMirrorDiagonal();
     // testCollage();
     // testCopy();
+    // testCopyPart();
+    testMyCollage();
     // testEdgeDetection();
     // testEdgeDetection2();
     // testChromakey();
