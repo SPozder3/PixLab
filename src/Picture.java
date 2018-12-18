@@ -296,6 +296,22 @@ public class Picture extends SimplePicture {
 		}
 	}
 
+	public void copyPart(Picture fromPic, int startInPicRow, int endInPicRow, int startInPicCol, int endInPicCol, int startRow, int startCol) {
+		Pixel fromPixel = null;
+		Pixel toPixel = null;
+		Pixel[][] toPixels = this.getPixels2D();
+		Pixel[][] fromPixels = fromPic.getPixels2D();
+		for (int fromRow = startInPicRow, toRow = startRow; fromRow < endInPicRow
+				&& toRow < toPixels.length; fromRow++, toRow++) {
+			for (int fromCol = startInPicCol, toCol = startCol; fromCol < endInPicCol
+					&& toCol < toPixels[0].length; fromCol++, toCol++) {
+				fromPixel = fromPixels[fromRow][fromCol];
+				toPixel = toPixels[toRow][toCol];
+				toPixel.setColor(fromPixel.getColor());
+			}
+		}
+	}
+
 	/** Method to create a collage of several pictures */
 	public void createCollage() {
 		Picture flower1 = new Picture("flower1.jpg");
@@ -312,6 +328,22 @@ public class Picture extends SimplePicture {
 		this.write("collage.jpg");
 	}
 
+	public void myCollage() {
+		Picture flower1 = new Picture("flower1.jpg");
+		Picture flower2 = new Picture("flower2.jpg");
+		this.copy(flower1, 0, 0);
+		this.copy(flower2, 100, 0);
+		Picture flowerNoBlue = new Picture(flower1);
+		flowerNoBlue.zeroBlue();
+		this.copy(flowerNoBlue, 200, 0);
+		flower1.mirrorDiagonal();
+		flower2.negate();
+		this.copy(flower1, 300, 0);
+		this.copy(flower2, 400, 0);
+		this.mirrorVertical();
+		this.write("collage.jpg");
+	}
+
 	/**
 	 * Method to show large changes in color
 	 * 
@@ -321,17 +353,49 @@ public class Picture extends SimplePicture {
 	public void edgeDetection(int edgeDist) {
 		Pixel leftPixel = null;
 		Pixel rightPixel = null;
+		Pixel topPixel = null;
+		Pixel botPixel = null;
 		Pixel[][] pixels = this.getPixels2D();
 		Color rightColor = null;
-		for (int row = 0; row < pixels.length; row++) {
+		Color botColor = null;
+		for (int row = 0; row < pixels.length - 1; row++) {
 			for (int col = 0; col < pixels[0].length - 1; col++) {
 				leftPixel = pixels[row][col];
 				rightPixel = pixels[row][col + 1];
+				topPixel = pixels[row][col];
+				botPixel = pixels[row + 1][col];
 				rightColor = rightPixel.getColor();
-				if (leftPixel.colorDistance(rightColor) > edgeDist)
+				botColor = botPixel.getColor();
+				if (leftPixel.colorDistance(rightColor) > edgeDist || topPixel.colorDistance(botColor) > edgeDist) {
 					leftPixel.setColor(Color.BLACK);
+				}
 				else
 					leftPixel.setColor(Color.WHITE);
+			}
+		}
+	}
+
+	public void myEdgeDetection(int edgeDist) {
+		Pixel leftPixel = null;
+		Pixel rightPixel = null;
+		Pixel topPixel = null;
+		Pixel botPixel = null;
+		Pixel[][] pixels = this.getPixels2D();
+		for (int row = 0; row < pixels.length - 1; row++) {
+			for (int col = 0; col < pixels[0].length - 1; col++) {
+				leftPixel = pixels[row][col];
+				rightPixel = pixels[row][col + 1];
+				topPixel = pixels[row][col];
+				botPixel = pixels[row + 1][col];
+				int topPixelAvg = (topPixel.getRed() + topPixel.getBlue() + topPixel.getGreen()) / 3;
+				int botPixelAvg = (botPixel.getRed() + botPixel.getBlue() + botPixel.getGreen()) / 3;
+				int leftPixelAvg = (leftPixel.getRed() + leftPixel.getBlue() + leftPixel.getGreen()) / 3;
+				int rightPixelAvg = (rightPixel.getRed() + rightPixel.getBlue() + rightPixel.getGreen()) / 3;
+				if ((leftPixelAvg - rightPixelAvg) <= edgeDist || (topPixelAvg - botPixelAvg) <= edgeDist) {
+					leftPixel.setColor(Color.WHITE);
+				}
+				else
+					leftPixel.setColor(Color.BLACK);
 			}
 		}
 	}

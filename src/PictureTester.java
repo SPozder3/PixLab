@@ -59,6 +59,13 @@ public class PictureTester
     swan.explore();
   }
 
+  public static void testMyEdgeDetection()
+  {
+    Picture swan = new Picture("swan.jpg");
+    swan.myEdgeDetection(1);
+    swan.explore();
+  }
+
   public static void testNegate() {
     Picture beach = new Picture("beach.jpg");
     beach.explore();
@@ -122,6 +129,20 @@ public class PictureTester
     gull.explore();
   }
 
+  public static void testCopyPart() {
+    Picture canvas = new Picture("640x480.jpg");
+    Picture beach = new Picture("beach.jpg");
+    canvas.copyPart(beach, 0, 100, 0, 100, 0, 0);
+    beach.explore();
+    canvas.explore();
+  }
+
+  public static void testMyCollage() {
+    Picture canvas = new Picture("640x480.jpg");
+    canvas.myCollage();
+    canvas.explore();
+  }
+
   /** Main method for testing.  Every class can have a main
     * method in Java */
   public static void main(String[] args)
@@ -142,11 +163,14 @@ public class PictureTester
     // testMirrorHorizontal();
     // testMirrorHorizontalBotToTop();
     // testMirrorArms();
-    testMirrorGull();
+    // testMirrorGull();
     // testMirrorDiagonal();
     // testCollage();
     // testCopy();
-    // testEdgeDetection();
+    // testCopyPart();
+    // testMyCollage();
+    testEdgeDetection();
+    testMyEdgeDetection();
     // testEdgeDetection2();
     // testChromakey();
     // testEncodeAndDecode();
